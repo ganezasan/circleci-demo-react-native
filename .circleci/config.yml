@@ -80,7 +80,7 @@ jobs:
 
   ios:
     macos:
-      xcode: "8.3"
+      xcode: 10.2.1
     working_directory: ~/demo-react-native
 
     # use a --login shell so our "set Ruby version" command gets picked up for later steps
@@ -126,32 +126,39 @@ jobs:
             - vendor/bundle
 
       - run:
-          command: bundle exec fastlane test
-          working_directory: ios
-
+          command: $NODE_BINARY -v
       - run:
-          name: set up test results
-          working_directory: ios
-          when: always
-          command: |
-            mkdir -p test-results/fastlane test-results/xcode
-            mv fastlane/report.xml test-results/fastlane
-            mv fastlane/test_output/report.junit test-results/xcode/junit.xml
+          command: echo $NODE_BINARY
+      - run:
+          command: fish -c 'which node'
 
-      - store_test_results:
-          path: ios/test-results
-
-      - store_artifacts:
-          path: ios/test-results
+      # - run:
+      #     command: bundle exec fastlane test
+      #     working_directory: ios
+      #
+      # - run:
+      #     name: set up test results
+      #     working_directory: ios
+      #     when: always
+      #     command: |
+      #       mkdir -p test-results/fastlane test-results/xcode
+      #       mv fastlane/report.xml test-results/fastlane
+      #       mv fastlane/test_output/report.junit test-results/xcode/junit.xml
+      #
+      # - store_test_results:
+      #     path: ios/test-results
+      #
+      # - store_artifacts:
+      #     path: ios/test-results
 
 workflows:
   version: 2
   node-android-ios:
     jobs:
       - node
-      - android:
-          requires:
-            - node
+      # - android:
+      #     requires:
+      #       - node
       - ios:
           requires:
             - node
